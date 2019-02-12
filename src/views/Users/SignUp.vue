@@ -49,7 +49,7 @@
                   </v-flex>
                 </v-layout>
                 <v-layout row>
-                  <v-btn type="submit" :disabled="!isFormValid">Sign Up</v-btn>
+                  <v-btn type="submit" :disabled="!isFormValid" :loading="loading">Sign Up</v-btn>
                 </v-layout>
               </v-form>
             </v-container>
@@ -82,6 +82,9 @@ export default {
     },
     error() {
       return this.$store.getters.error;
+    },
+    loading() {
+      return this.$store.getters.loading;
     }
   },
   watch: {

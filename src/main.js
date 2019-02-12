@@ -8,8 +8,7 @@ import DateFilter from './filters/date'
 import AlertCmp from './components/Alert'
 import dotenv from 'dotenv'
 dotenv.config()
-// eslint-disable-next-line
-console.log(process.env)
+
 Vue.config.productionTip = false
 Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertCmp)

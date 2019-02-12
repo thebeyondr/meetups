@@ -73,11 +73,22 @@ export const store = new Vuex.Store({
         location: payload.location,
         description: payload.description,
         imageUrl: payload.imageUrl,
-        date: payload.date,
-        id: payload.id
+        date: payload.date
       }
       // Push to firebase
-      commit('addMeetup', meetup)
+      firebase
+        .database()
+        .ref('meetups')
+        .push(meetup)
+        .then(data => {
+          // eslint-disable-next-line
+          console.log(data)
+          commit('addMeetup', meetup)
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err)
+        })
     },
     createUser ({ commit }, payload) {
       commit('setLoading', true)
@@ -122,6 +133,9 @@ export const store = new Vuex.Store({
           // eslint-disable-next-line
           console.log(err)
         })
+    },
+    clearError ({ commit }) {
+      commit('clearError')
     }
   },
   getters: {

@@ -14,7 +14,7 @@
           <v-carousel-item
             v-for="(meetup) in meetups"
             :key="meetup.id"
-            :src="meetup.imageURL"
+            :src="meetup.imageUrl"
             @click.stop="loadMeetup(meetup.id)"
           >
             <div class="meetup-title">
@@ -34,35 +34,10 @@
 
 <script>
 export default {
-  data() {
-    return {
-      meetups: [
-        {
-          imageURL:
-            "https://fshoq.com/free-photos/p/151/eiffel-tower-in-paris/small/show",
-          id: "dgjhkhljhfhgghjkl",
-          title: "Node Workshop in Paris"
-        },
-        {
-          imageURL:
-            "https://www.maxpixel.net/static/photo/2x/Us-Congress-America-Washington-Dc-Government-2533244.jpg",
-          id: "sdfsdfdghfj",
-          title: "Meetup in DC"
-        },
-        {
-          imageURL:
-            "https://images.pexels.com/photos/109611/pexels-photo-109611.jpeg?cs=srgb&dl=mandeville-jamaica-109611.jpg",
-          id: "vbcbbvbvfsvf",
-          title: "Meetup In Mandeville"
-        },
-        {
-          imageURL:
-            "https://cdn12.picryl.com/photo/2016/12/31/frauenkirche-dresden-neumarkt-germany-33b39e-1024.jpg",
-          id: "rtyurtyuitu",
-          title: "Meetup in Germany"
-        }
-      ]
-    };
+  computed:{
+    meetups (){
+      return this.$store.getters.loadFeaturedMeetups
+    }
   },
   methods: {
     loadMeetup(id) {
