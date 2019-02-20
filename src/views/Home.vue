@@ -8,7 +8,12 @@
         <v-btn large to="/meetups/new" class="text-sm-left text-xs-center">Organize meetup</v-btn>
       </v-flex>
     </v-layout>
-    <v-layout row wrap>
+    <v-layout>
+      <v-flex xs12 class="text-xs-center">
+        <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
+      </v-flex>
+    </v-layout>
+    <v-layout row wrap v-if="!loading">
       <v-flex xs12>
         <v-carousel>
           <v-carousel-item
@@ -34,9 +39,12 @@
 
 <script>
 export default {
-  computed:{
-    meetups (){
-      return this.$store.getters.loadFeaturedMeetups
+  computed: {
+    meetups() {
+      return this.$store.getters.loadFeaturedMeetups;
+    },
+    loading() {
+      return this.$store.getters.loading;
     }
   },
   methods: {

@@ -1,11 +1,4 @@
 <template>
-  <!-- <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>-->
   <v-app>
     <v-navigation-drawer temporary absolute v-model="sideNav">
       <v-list>
@@ -14,6 +7,12 @@
             <v-icon left>{{item.icon}}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>{{item.title}}</v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-if="userIsAuthenticated" @click="onLogout">
+          <v-list-tile-action>
+            <v-icon left>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>Logout</v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -27,6 +26,9 @@
         <v-btn flat v-for="item in menuItems" :key="item.title" :to="item.link" exact>
           <v-icon left>{{item.icon}}</v-icon>
           {{item.title}}
+        </v-btn>
+        <v-btn flat v-if="userIsAuthenticated" @click="onLogout">
+          <v-icon left>exit_to_app</v-icon>Logout
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -65,6 +67,12 @@ export default {
         this.$store.getters.loadUser !== null &&
         this.$store.getters.loadUser !== undefined
       );
+    }
+  },
+  methods: {
+    onLogout() {
+      this.$store.dispatch("logout");
+      this.$router.push("/");
     }
   }
 };

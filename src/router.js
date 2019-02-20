@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home.vue'
-
+import AuthGuard from './auth-guard'
 // Lazy loading components
 const Meetups = () => import('./views/Meetups/Meetups')
 const Meetup = () => import('./views/Meetups/Meetup')
@@ -29,7 +29,8 @@ export default new Router({
     {
       path: '/meetups/new',
       name: 'createmeetup',
-      component: CreateMeetup
+      component: CreateMeetup,
+      beforeEnter: AuthGuard
     },
     {
       path: '/meetups/:id',

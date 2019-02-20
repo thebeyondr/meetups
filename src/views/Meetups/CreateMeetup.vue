@@ -34,13 +34,15 @@
 
           <v-layout row>
             <v-flex xs12 sm6 offest-sm3>
-              <v-text-field
-                name="image-url"
-                label="Image Url"
-                id="image-url"
-                v-model="imageUrl"
-                :rules="[() => !!imageUrl || 'This field is required']"
-              ></v-text-field>
+              <v-btn raised @click="onUploadClick">Upload an image</v-btn>
+              <input
+                type="file"
+                name="image"
+                style="display:none;"
+                ref="fileInput"
+                accept="image/*"
+                @change="onFilePick"
+              >
             </v-flex>
           </v-layout>
 
@@ -65,9 +67,7 @@
 
           <v-layout row>
             <v-flex xs12 sm6>
-              <h4 class="title">
-                Pick a date & time
-              </h4>
+              <h4 class="title">Pick a date & time</h4>
             </v-flex>
           </v-layout>
 
@@ -76,13 +76,14 @@
               <v-date-picker v-model="date"></v-date-picker>
             </v-flex>
             <v-flex xs12 sm6>
-              <v-time-picker v-model='time' format="ampm"></v-time-picker>
+              <v-time-picker v-model="time" format="ampm"></v-time-picker>
             </v-flex>
           </v-layout>
 
           <v-layout row>
-            <v-flex xs12 sm6 offset-sm-3 >
+            <v-flex xs12 sm6 offset-sm-3>
               <v-btn class="primary" :disabled="!isFormValid" type="submit">Create Meetup</v-btn>
+              <p>{{this.submittableDateTime}}</p>
             </v-flex>
           </v-layout>
         </v-form>
@@ -101,7 +102,8 @@ export default {
       description: "",
       imageUrl: "",
       date: null,
-      time: null
+      time: null,
+      image: null
     };
   },
   computed: {
@@ -110,12 +112,15 @@ export default {
         this.title !== "" &&
         this.location !== "" &&
         this.description !== "" &&
-        this.imageUrl !== "" && 
+        this.imageUrl !== "" &&
         this.submittableDateTime !== "Invalid Date"
       );
     },
     submittableDateTime() {
-      return new Date(Date.parse(`${this.date}T${this.time}`))
+      if (!this.date || !this.time) {
+        return "Invalid Date";
+      }
+      return new Date(`${this.date}T${this.time}`).toISOString();
     }
   },
   methods: {
@@ -123,16 +128,34 @@ export default {
       if (!this.isFormValid) {
         return;
       }
+      if (!this.image) {
+        return;
+      }
       const newMeetup = {
         title: this.title,
         location: this.location,
         description: this.description,
-        imageUrl: this.imageUrl,
-        date: this.submittableDateTime,
-        id: "deedwefwfwef"
+        image: this.image,
+        date: this.submittableDateTime
       };
       this.$store.dispatch("createMeetup", newMeetup);
-      this.$router.push('/meetups')
+      this.$router.push("/meetups");
+    },
+    onUploadClick() {
+      this.$refs.fileInput.click();
+    },
+    onFilePick(event) {
+      const files = event.target.files;
+      let filename = files[0].name;
+      if (!filename.includes(".")) {
+        return alert("Please enter a valid file!");
+      }
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.image = files[0];
     }
   }
 };
